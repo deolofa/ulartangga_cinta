@@ -1,0 +1,122 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tangga Cinta</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: #ffe6f0;
+      text-align: center;
+      padding: 20px;
+    }
+    h1 {
+      color: #d63384;
+    }
+    #board {
+      display: grid;
+      grid-template-columns: repeat(6, 50px);
+      gap: 5px;
+      justify-content: center;
+      margin: 20px auto;
+    }
+    .tile {
+      width: 50px;
+      height: 50px;
+      background-color: #fff0f5;
+      border: 1px solid #d63384;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+    .player {
+      background-color: #ff69b4;
+      color: white;
+      border-radius: 50%;
+      padding: 5px 10px;
+    }
+    #diceBtn {
+      background-color: #d63384;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 20px;
+      border-radius: 8px;
+    }
+    #message {
+      margin-top: 15px;
+      font-weight: bold;
+      min-height: 40px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Tangga Cinta</h1>
+  <div id="board"></div>
+  <button id="diceBtn" onclick="rollDice()">Lempar Dadu</button>
+  <div id="message">Giliran: Pemain 1</div>
+
+  <script>
+    const board = document.getElementById('board');
+    const message = document.getElementById('message');
+
+    const size = 30;
+    let positions = [0, 0]; // [Player1, Player2]
+    let turn = 0; // 0 = Player 1, 1 = Player 2
+
+    const challenges = {
+      3: "Peluk pasanganmu selama 30 detik!",
+      7: "Bisikkan sesuatu yang romantis.",
+      10: "Pijat tangan pasanganmu.",
+      14: "Ceritakan kenangan pertama yang kamu ingat tentang pasanganmu.",
+      17: "Lakukan dansa kecil bersama!",
+      20: "Tulis pesan cinta singkat di HP pasangan.",
+      23: "Lakukan eye contact selama 1 menit.",
+      26: "Katakan 3 hal yang kamu syukuri dari pasanganmu.",
+      29: "Kecup kening pasangan dengan penuh cinta."
+    };
+
+    function renderBoard() {
+      board.innerHTML = '';
+      for (let i = 1; i <= size; i++) {
+        const tile = document.createElement('div');
+        tile.className = 'tile';
+
+        if (i === positions[0] && i === positions[1]) {
+          tile.innerHTML = '<div class="player">♥2</div>';
+        } else if (i === positions[0]) {
+          tile.innerHTML = '<div class="player">P1</div>';
+        } else if (i === positions[1]) {
+          tile.innerHTML = '<div class="player">P2</div>';
+        } else {
+          tile.textContent = i;
+        }
+
+        board.appendChild(tile);
+      }
+    }
+
+    function rollDice() {
+      const roll = Math.floor(Math.random() * 6) + 1;
+      positions[turn] += roll;
+      if (positions[turn] > size) positions[turn] = size;
+
+      renderBoard();
+
+      let challengeText = challenges[positions[turn]] || "Tidak ada tantangan. Lanjut!";
+      let currentPlayer = turn === 0 ? "Pemain 1" : "Pemain 2";
+
+      message.textContent = `Giliran: ${currentPlayer} | Tantangan: ${challengeText}`;
+
+      turn = 1 - turn;
+    }
+
+    renderBoard();
+  </script>
+</body>
+</html>
