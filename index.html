@@ -1,122 +1,148 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Tangga Cinta</title>
-  <style>
-    body {
-      font-family: 'Arial', sans-serif;
-      background: #ffe6f0;
-      text-align: center;
-      padding: 20px;
-    }
-    h1 {
-      color: #d63384;
-    }
-    #board {
-      display: grid;
-      grid-template-columns: repeat(6, 50px);
-      gap: 5px;
-      justify-content: center;
-      margin: 20px auto;
-    }
-    .tile {
-      width: 50px;
-      height: 50px;
-      background-color: #fff0f5;
-      border: 1px solid #d63384;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-    }
-    .player {
-      background-color: #ff69b4;
-      color: white;
-      border-radius: 50%;
-      padding: 5px 10px;
-    }
-    #diceBtn {
-      background-color: #d63384;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      font-size: 16px;
-      cursor: pointer;
-      margin-top: 20px;
-      border-radius: 8px;
-    }
-    #message {
-      margin-top: 15px;
-      font-weight: bold;
-      min-height: 40px;
-    }
-  </style>
-</head>
-<body>
-  <h1>Tangga Cinta</h1>
-  <div id="board"></div>
-  <button id="diceBtn" onclick="rollDice()">Lempar Dadu</button>
-  <div id="message">Giliran: Pemain 1</div>
-
-  <script>
-    const board = document.getElementById('board');
-    const message = document.getElementById('message');
-
-    const size = 30;
-    let positions = [0, 0]; // [Player1, Player2]
-    let turn = 0; // 0 = Player 1, 1 = Player 2
-
-    const challenges = {
-      3: "Peluk pasanganmu selama 30 detik!",
-      7: "Bisikkan sesuatu yang romantis.",
-      10: "Pijat tangan pasanganmu.",
-      14: "Ceritakan kenangan pertama yang kamu ingat tentang pasanganmu.",
-      17: "Lakukan dansa kecil bersama!",
-      20: "Tulis pesan cinta singkat di HP pasangan.",
-      23: "Lakukan eye contact selama 1 menit.",
-      26: "Katakan 3 hal yang kamu syukuri dari pasanganmu.",
-      29: "Kecup kening pasangan dengan penuh cinta."
-    };
-
-    function renderBoard() {
-      board.innerHTML = '';
-      for (let i = 1; i <= size; i++) {
-        const tile = document.createElement('div');
-        tile.className = 'tile';
-
-        if (i === positions[0] && i === positions[1]) {
-          tile.innerHTML = '<div class="player">♥2</div>';
-        } else if (i === positions[0]) {
-          tile.innerHTML = '<div class="player">P1</div>';
-        } else if (i === positions[1]) {
-          tile.innerHTML = '<div class="player">P2</div>';
-        } else {
-          tile.textContent = i;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tangga Cinta - Mode Hot</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background: pink;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        board.appendChild(tile);
-      }
-    }
+        h1 {
+            color: #e60073;
+        }
 
-    function rollDice() {
-      const roll = Math.floor(Math.random() * 6) + 1;
-      positions[turn] += roll;
-      if (positions[turn] > size) positions[turn] = size;
+        #game-board {
+            display: grid;
+            grid-template-columns: repeat(10, 40px);
+            grid-template-rows: repeat(10, 40px);
+            gap: 1px;
+            margin-top: 20px;
+        }
 
-      renderBoard();
+        .cell {
+            width: 40px;
+            height: 40px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+            position: relative;
+        }
 
-      let challengeText = challenges[positions[turn]] || "Tidak ada tantangan. Lanjut!";
-      let currentPlayer = turn === 0 ? "Pemain 1" : "Pemain 2";
+        .player {
+            position: absolute;
+            font-size: 14px;
+        }
 
-      message.textContent = `Giliran: ${currentPlayer} | Tantangan: ${challengeText}`;
+        #dice {
+            margin-top: 20px;
+            font-size: 24px;
+            padding: 10px 20px;
+            background: #e60073;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
 
-      turn = 1 - turn;
-    }
+        #challenge {
+            margin-top: 20px;
+            padding: 10px;
+            background: #fff0f5;
+            border: 1px solid #e60073;
+            max-width: 300px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Tangga Cinta - Mode Hot</h1>
+    <div id="game-board"></div>
+    <button id="dice">Lempar Dadu</button>
+    <div id="challenge"></div>
 
-    renderBoard();
-  </script>
+    <script>
+        const board = document.getElementById('game-board');
+        const challengeBox = document.getElementById('challenge');
+        const diceBtn = document.getElementById('dice');
+
+        const players = [
+            { pos: 0, symbol: "♀️" },
+            { pos: 0, symbol: "♂️" }
+        ];
+
+        let turn = 0;
+
+        const challenges = {
+            3: "Berikan ciuman panas selama 1 menit.",
+            7: "Jilat area sensitif pasangan.",
+            12: "Mainkan bagian tubuh pasangan tanpa tangan.",
+            17: "Gunakan lidah untuk eksplorasi.",
+            25: "Bergantian saling oral selama 2 menit.",
+            31: "Lakukan tarikan lembut di leher pasangan.",
+            45: "Eksplorasi posisi baru malam ini.",
+            60: "Berikan 'surprise pleasure' ke pasangan.",
+            78: "Pasanganmu jadi dominan 5 menit.",
+            88: "Pilih satu fantasi seksual dan lakukan.",
+        };
+
+        function createBoard() {
+            for (let i = 99; i >= 0; i--) {
+                const cell = document.createElement('div');
+                cell.className = 'cell';
+                cell.dataset.index = i;
+                cell.innerText = i + 1;
+                board.appendChild(cell);
+            }
+            updateBoard();
+        }
+
+        function updateBoard() {
+            document.querySelectorAll('.cell').forEach(cell => {
+                cell.innerHTML = cell.dataset.index * 1 + 1;
+            });
+
+            players.forEach((player, index) => {
+                const cell = document.querySelector(`.cell[data-index='${player.pos}']`);
+                const icon = document.createElement('div');
+                icon.className = 'player';
+                icon.innerText = player.symbol;
+                icon.style.bottom = `${index * 15}px`;
+                cell.appendChild(icon);
+            });
+        }
+
+        function rollDice() {
+            const roll = Math.floor(Math.random() * 6) + 1;
+            const player = players[turn];
+            player.pos += roll;
+            if (player.pos >= 99) player.pos = 99;
+            updateBoard();
+
+            // Show challenge
+            const challenge = challenges[player.pos];
+            if (challenge) {
+                challengeBox.innerText = `Tantangan: ${challenge}`;
+            } else {
+                challengeBox.innerText = `Lanjutkan permainan...`;
+            }
+
+            // Ganti giliran
+            turn = (turn + 1) % 2;
+        }
+
+        diceBtn.addEventListener('click', rollDice);
+        createBoard();
+    </script>
 </body>
 </html>
+
